@@ -2,7 +2,7 @@ const pool = require("../conexao")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const senhajwt = require("../senhajwt")
-
+const verificarLogin = require("../intermediarios/verificarLogin")
 
 const cadastrarUsuario = async (req, res) => {
     const { nome, email, senha } = req.body
@@ -39,7 +39,7 @@ const loginUsuario = async (req, res) => {
     const { email, senha } = req.body
 
     if(!email || !senha) {
-        return res.status(400).json({ mensagem: "Email e senha são obrigatórios"})
+        return res.status(400).json({ mensagem: "Usuário e/ou senha inválido(s)."})
     }
 
     try {
@@ -47,13 +47,13 @@ const loginUsuario = async (req, res) => {
         [email])
 
         if(usuario.rowCount < 1){
-            return res.status(404).json({ mensagem: "Email ou senha inválido"})
+            return res.status(404).json({ mensagem: "Usuário e/ou senha inválido(s)."})
         }
 
         const verificarSenha = await bcrypt.compare(senha, usuario.rows[0].senha)
 
         if (!verificarSenha) {
-            return res.status(404).json({ mensagem: "Email ou senha inválido"})
+            return res.status(404).json({ mensagem: "Usuário e/ou senha inválido(s)."})
         }
 
         const token = jwt.sign({ id: usuario.rows[0].id}, senhajwt, {expiresIn: "6h"})
@@ -65,14 +65,25 @@ const loginUsuario = async (req, res) => {
             token
         })
     } catch (error) { 
-        return res.status(500).josn({ mensagem: "Erro interno do servidor"})
+        return res.status(500).json({ mensagem: "Erro interno do servidor"})
     }
-
 }
 
+const detalharUsuario = async (req, res) => {
+    try {
+        const listarUsuario = await pool.query(`select id, nome, email from usuarios where id = $1`,
+        [req.usuario.id])
+
+        return res.json(listarUsuario.rows[0])
+    } catch (error) {
+        return res.status(500).json({ mensagem: "Erro interno qqqqdo servidor"})
+    }
+}
 
 
 module.exports = {
     cadastrarUsuario,
-    loginUsuario
+    loginUsuario,
+    detalharUsuario,
+
 }
