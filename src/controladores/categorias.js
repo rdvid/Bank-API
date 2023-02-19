@@ -1,7 +1,4 @@
 const pool = require("../conexao")
-const bcrypt = require("bcrypt")
-const jwt = require("jsonwebtoken")
-const senhajwt = require("../senhajwt")
 
 const listarCategorias = async (req, res) => {
     try {
