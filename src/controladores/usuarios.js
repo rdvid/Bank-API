@@ -2,7 +2,7 @@ const pool = require("../conexao")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const senhajwt = require("../senhajwt")
-const verificarLogin = require("../intermediarios/verificarLogin")
+
 
 const cadastrarUsuario = async (req, res) => {
     const { nome, email, senha } = req.body
@@ -81,10 +81,36 @@ const detalharUsuario = async (req, res) => {
     }
 }
 
+const atualizarUsuario = async (req, res) => {
+    const { nome, email, senha } = req.body
+
+    if (!nome || !email || !senha) {
+        return res.status(400).json({ mensagem: "Os campos nome, email e senha são obrigatórios"})
+    }
+
+    try {
+        const checarEmail = await pool.query("select * from usuarios where email = $1", 
+        [email])
+
+        if (checarEmail.rowCount == 0 || checarEmail.rowCount > 0 && req.usuario.id == checarEmail.rows[0].id) {
+            const senhaNova = await bcrypt.hash(senha, 10)
+        
+        await pool.query('update usuarios set nome = $1, email = $2, senha = $3 where id = $4', 
+        [nome, email, senhaNova, req.usuario.id])
+
+        return res.status(201).json()
+        }
+
+        return res.status(400).json({ mensagem: "O e-mail informado já está sendo utilizado por outro usuário."})
+    } catch (error) {
+        return res.status(500).json({mensagem: "Erro interno do servidor"})
+    }
+
+}
 
 module.exports = {
     cadastrarUsuario,
     loginUsuario,
     detalharUsuario,
-
+    atualizarUsuario
 }
