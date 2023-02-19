@@ -1,4 +1,5 @@
 const senhajwt = require("../senhajwt")
+const pool = require("../conexao")
 const jwt = require("jsonwebtoken")
 
 const verificarLogin = async (req, res, next) => {
@@ -7,17 +8,16 @@ const verificarLogin = async (req, res, next) => {
     if (!authorization) {
         return res.status(401).json({ mensagem: "Usuário não logado"})
     }
-
+    
     const token = authorization.split(" ")[1]
-
     
     try {
         const {id} = jwt.verify(token, senhajwt)
 
-        const {rows, rowCount} = await pool.query(`select * from usuarios where id = $1 returning *`, 
+        const {rows, rowCount} = await pool.query(`select * from usuarios where id = $1`, 
         [id])
 
-        if (rowCount == 0) {
+        if (rowCount === 0) {
             return res.status(401).json({mensagem: "Usuário não autorizado"})
         }
 
@@ -28,7 +28,7 @@ const verificarLogin = async (req, res, next) => {
         next()
         
     } catch (error) {
-        return res.status(500).json({mensagem: "Erro interno do servidor"})
+        return res.status(500).json({mensagem: "Erro interno do servidor verificar"})
     }
 
 }

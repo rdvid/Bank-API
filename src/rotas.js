@@ -6,7 +6,7 @@ const rotas = express()
 rotas.post("/usuario", cadastrarUsuario)
 rotas.post("/login", loginUsuario)
 
-//rotas.use(verificarLogin)
+rotas.use(verificarLogin)
 
 rotas.get("/usuario", detalharUsuario)
 

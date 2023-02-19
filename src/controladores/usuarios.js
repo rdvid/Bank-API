@@ -71,12 +71,13 @@ const loginUsuario = async (req, res) => {
 
 const detalharUsuario = async (req, res) => {
     try {
-        const listarUsuario = await pool.query(`select id, nome, email from usuarios where id = $1`,
-        [req.usuario.id])
+        const {rows} = await pool.query('select * from usuarios where id = $1', [req.usuario.id])
+        
+        const {senha: _, ... usuarioInfo} = rows[0]
 
-        return res.json(listarUsuario.rows[0])
+        return res.status(200).json(usuarioInfo)
     } catch (error) {
-        return res.status(500).json({ mensagem: "Erro interno qqqqdo servidor"})
+        return res.status(500).json({mensagem: "Erro interno do servidor"})
     }
 }
 
