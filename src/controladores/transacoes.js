@@ -22,7 +22,7 @@ const detalharTransacao = async (req, res) => {
         const transacao = await pool.query('select * from transacoes where usuario_id = $1 and id = $2', 
         [req.usuario.id, id])
 
-        if (!transacao) {
+        if (!transacao.rowCount) {
             return res.status(404).json({ mensagem: "Transação não existente"})
         }
 
