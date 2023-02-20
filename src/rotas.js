@@ -1,6 +1,6 @@
 const express = require("express")
 const listarCategorias = require("./controladores/categorias")
-const { listarTransacoes, detalharTransacao, atualizarTransacao, cadastrarTransacao } = require("./controladores/transacoes")
+const { listarTransacoes, detalharTransacao, atualizarTransacao, cadastrarTransacao, deletarTransacao } = require("./controladores/transacoes")
 const { cadastrarUsuario, loginUsuario, detalharUsuario, atualizarUsuario } = require("./controladores/usuarios")
 const verificarLogin = require("./intermediarios/verificarLogin")
 const { listarExtrato } = require("./controladores/extratos")
@@ -22,7 +22,7 @@ rotas.get("/transacao", listarTransacoes)
 rotas.get("/transacao/:id", detalharTransacao)
 rotas.post("/transacao", cadastrarTransacao)
 rotas.put("/transacao/:id", atualizarTransacao)
-
+rotas.delete("/transacao/:id", deletarTransacao)
 
 
 module.exports = rotas

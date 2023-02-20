@@ -4,7 +4,7 @@ const { coletarIdToken } = require("./usuarios")
 const listarTransacoes = async (req, res) => {
     try {
         
-        const {rows} = await pool.query('select * from transacoes where usuario_id = $1', 
+        const {rows} = await pool.query('select * from transacoes where usuario_id = $1 order by id', 
         [req.usuario.id])
 
         return res.json(rows)
@@ -128,9 +128,28 @@ const atualizarTransacao = async (req, res) => {
 
 }
 
+const deletarTransacao = async (req, res) => {
+    const {id} = req.params;
+    const token = req.headers.authorization.split(' ')[1];
+    const usuario_id = coletarIdToken(token)
+    try {
+        const {rowCount} = await pool.query(`delete from transacoes where id = $1 and usuario_id = $2`, [id, usuario_id]);
+        
+        if(rowCount < 1){
+            return res.status(404).json({mensagem: "Transação não encontrada"})
+        }
+
+        return res.status(201).send();
+
+    } catch (error) {
+        return res.status(500).json({mensagem: "erro interno do servidor"})
+    }
+}
+
 module.exports = {
     listarTransacoes,
     detalharTransacao,
     atualizarTransacao,
-    cadastrarTransacao
+    cadastrarTransacao,
+    deletarTransacao
 }
