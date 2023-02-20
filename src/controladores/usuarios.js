@@ -3,6 +3,11 @@ const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const senhajwt = require("../senhajwt")
 
+const coletarIdToken = (token) => {
+    let tokenDecode = jwt.decode(token, {complete: true});
+    return tokenDecode.payload.id;
+}
+
 
 const cadastrarUsuario = async (req, res) => {
     const { nome, email, senha } = req.body
@@ -26,14 +31,17 @@ const cadastrarUsuario = async (req, res) => {
         values ($1, $2, $3) returning *`, 
         [nome, email, senhaCriptografada])
 
-        const { senha:_, ...usuario} = novoUsuario.rows[0]
+        const { senha: _, ...usuario} = novoUsuario.rows[0]
+
+        console.log(senha, usuario)
 
         return res.status(201).json(usuario)
         
     } catch (error) {
-        return res.status(500).josn({ mensagem: "Erro interno do servidor"})
+        return res.status(500).json({ mensagem: "Erro interno do servidor"})
     }
 }
+
 
 const loginUsuario = async (req, res) => {
     const { email, senha } = req.body
@@ -69,17 +77,19 @@ const loginUsuario = async (req, res) => {
     }
 }
 
+
 const detalharUsuario = async (req, res) => {
     try {
         const {rows} = await pool.query('select * from usuarios where id = $1', [req.usuario.id])
         
-        const {senha: _, ... usuarioInfo} = rows[0]
+        const {senha: _, ...usuarioInfo} = rows[0]
 
         return res.status(200).json(usuarioInfo)
     } catch (error) {
         return res.status(500).json({mensagem: "Erro interno do servidor"})
     }
 }
+
 
 const atualizarUsuario = async (req, res) => {
     const { nome, email, senha } = req.body
@@ -112,5 +122,6 @@ module.exports = {
     cadastrarUsuario,
     loginUsuario,
     detalharUsuario,
-    atualizarUsuario
+    atualizarUsuario,
+    coletarIdToken
 }
