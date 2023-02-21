@@ -24,7 +24,7 @@ const listarTransacoes = async (req, res) => {
             return res.json(transacoes)    
         }
 
-        return res.status(200).json(rows)
+        return res.status(200).json(rows.sort((a, b) => {return a.id - b.id}))
 
     } catch (error) {
         return res.status(500).json({mensagem: "Erro interno do servidor"})
@@ -36,7 +36,12 @@ const detalharTransacao = async (req, res) => {
     const { id } = req.params
 
     try {
-        const transacao = await pool.query('select * from transacoes where usuario_id = $1 and id = $2', 
+        const transacao = await pool.query(`
+        select transacoes.id, tipo, transacoes.descricao, valor, data, usuario_id, categoria_id, categorias.descricao as categoria_nome 
+        from transacoes
+        join categorias
+        on transacoes.categoria_id = categorias.id
+        where usuario_id = $1 and transacoes.id = $2`, 
         [req.usuario.id, id])
 
         if (!transacao.rowCount) {
