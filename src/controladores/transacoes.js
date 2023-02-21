@@ -2,12 +2,29 @@ const pool = require("../conexao")
 const { coletarIdToken } = require("./usuarios")
 
 const listarTransacoes = async (req, res) => {
-    try {
-        
-        const {rows} = await pool.query('select * from transacoes where usuario_id = $1 order by id', 
-        [req.usuario.id])
+    const token = req.headers.authorization.split(' ')[1];
+    const usuario_id = coletarIdToken(token)
+    const {filtro} = req.query;
 
-        return res.json(rows)
+    try {
+
+        const {rows} = await pool.query(`
+            select transacoes.id, tipo, transacoes.descricao, valor, data, usuario_id, categoria_id, categorias.descricao
+            from transacoes
+            join categorias
+            on transacoes.categoria_id = categorias.id
+            where usuario_id = $1 
+            order by categorias.descricao`, [usuario_id]);
+
+        if(filtro){
+            const transacoes = rows.filter((transacao) => {
+                return filtro.includes(transacao.descricao.toLowerCase().split(' ')[0].replace(/çã/g, 'ca'))
+            })
+    
+            return res.json(transacoes)    
+        }
+
+        return res.status(200).json(rows)
 
     } catch (error) {
         return res.status(500).json({mensagem: "Erro interno do servidor"})
@@ -145,6 +162,7 @@ const deletarTransacao = async (req, res) => {
         return res.status(500).json({mensagem: "erro interno do servidor"})
     }
 }
+
 
 module.exports = {
     listarTransacoes,
