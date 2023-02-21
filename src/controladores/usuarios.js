@@ -8,7 +8,6 @@ const coletarIdToken = (token) => {
     return tokenDecode.payload.id;
 }
 
-
 const cadastrarUsuario = async (req, res) => {
     const { nome, email, senha } = req.body
 
@@ -41,7 +40,6 @@ const cadastrarUsuario = async (req, res) => {
         return res.status(500).json({ mensagem: "Erro interno do servidor"})
     }
 }
-
 
 const loginUsuario = async (req, res) => {
     const { email, senha } = req.body
@@ -76,7 +74,6 @@ const loginUsuario = async (req, res) => {
         return res.status(500).json({ mensagem: "Erro interno do servidor"})
     }
 }
-
 
 const detalharUsuario = async (req, res) => {
     try {
