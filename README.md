@@ -21,9 +21,9 @@ To use the API, simply send HTTP requests to the available endpoints.
 
 Here are the endpoints available in the API:
 
-- `POST /usuario`: this path is a login panel, it demands, in your body request, 
-an object with two values, and if this credencials are accepted it returns a object
-with the values passed plus a token id to use in all requests linked to user account:
+- `POST /usuario`: this path is a login panel, it demands, in your body request,
+  an object with two values, and if this credencials are accepted it returns a object
+  with the values passed plus a token id to use in all requests linked to user account:
 
 #### **Request Example**
 
@@ -51,7 +51,6 @@ with the values passed plus a token id to use in all requests linked to user acc
 
 rotas.post("/usuario", cadastrarUsuario)
 rotas.post("/login", loginUsuario)
-
 
 - `GET /categoria`: Returns a list of all registered categories.
 
@@ -91,7 +90,6 @@ rotas.post("/login", loginUsuario)
 
 To use the API, send HTTP requests to these endpoints using an HTTP client such as [Postman](https://www.postman.com/), [Insomnia](https://insomnia.rest/) or [cURL](https://curl.se/).
 
-
 ## Contributing
 
 We welcome contributions to this project! To contribute, follow these steps:
@@ -105,12 +103,10 @@ We welcome contributions to this project! To contribute, follow these steps:
 ## Contributors
 
 | [<img src="https://avatars.githubusercontent.com/u/85734491?v=4" width=115><br><sub>Adelvane Ferreira</sub>](https://github.com/AdelvaneFerreira) | [<img src="https://avatars.githubusercontent.com/u/95707984?v=4" width=115><br><sub>Paulo Hartelt</sub>](https://github.com/PauloHartelt) | [<img src="https://avatars.githubusercontent.com/u/76759510?v=4" width=115><br><sub>Janine Henrique</sub>](https://github.com/janinehenrique) |
-| :---------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: |
+| :-----------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------: |
 
 ## Contact
 
 If you have any questions or suggestions about this project, feel free to contact me through my GitHub profile: [@PauloHartelt](https://github.com/PauloHartelt).
-
-
 
 ![imagem 1](https://user-images.githubusercontent.com/95707984/186934611-ead39007-43d3-454c-9357-0d14b11c2c51.png)
